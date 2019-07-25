@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  car_booking:
+    image: golang:alpine
+    build:
+      context: ./build/package
+      dockerfile: Dockerfile
+    volumes:
+      - .:/go/src/car_booking
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
