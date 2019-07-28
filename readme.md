@@ -15,3 +15,8 @@ I will use following technologies to build my project.
 * HTML/CSS
 
 
+##### Useful Links
+
+[How to validate email address in golang](https://www.socketloop.com/tutorials/golang-validate-email-address-with-regular-expression)
+
+
