@@ -17,3 +17,7 @@ I will use following technologies to build my project.
 ##### Useful Links
 
 [How to validate email address in golang](https://www.socketloop.com/tutorials/golang-validate-email-address-with-regular-expression)
+
+[Hashing password in golang](https://medium.com/@jcox250/password-hash-salt-using-golang-b041dc94cb72)
+
+[Password encryption](https://www.sohamkamani.com/blog/2017/01/01/web-security-password-storage/)

@@ -1,12 +1,23 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"regexp"
+
+	_ "github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 )
+
+type users struct {
+	id       int    `json:"id"`
+	username string `json:"username"`
+	email    string `json:"email"`
+	password string `json:"password"`
+}
 
 var tmpl *template.Template
 
@@ -66,13 +77,36 @@ func userLoginData(login_response http.ResponseWriter, login_request *http.Reque
 	password := login_request.FormValue("password")
 	remember_me := login_request.FormValue("remember_me")
 
-	fmt.Println("User Name : ", user_name)
-	fmt.Println("Password : ", password)
+	hashed_password := passwordHashing([]byte(password))
+	// fmt.Println("User Name : ", user_name)
+	// fmt.Println("Password : ", password)
 	fmt.Println("Remmber me  : ", remember_me)
+	// fmt.Println("hashed password   : ", hashed_password)
+
+	userLogin(user_name, hashed_password)
+
 }
 
 // user data processing functions
-func userLogin() {
+func userLogin(user_name string, password string) {
+	var login_user users
+
+	db, err := sql.Open("mysql", "root:7890@tcp(127.0.0.1:3306)/car_booking_users")
+	sqlQuery := `select id,password from car_booking_users where username=?;`
+	if err != nil {
+		log.Panic("Couldnt open database connection, userLogin")
+	}
+
+	val := db.QueryRow(sqlQuery, user_name)
+	values := val.Scan(&login_user)
+
+	fmt.Println("ID :", values) //, &login_user.password, &login_user.email))
+	id := val.Scan(login_user.id)
+	fmt.Println("Id : ", id)
+
+	fmt.Println("User name and password", user_name, password)
+
+	defer db.Close()
 
 }
 
@@ -80,8 +114,18 @@ func sendRegisterEmail(email string) {
 
 }
 
-// test function
-// output html
+// internal functions
+func passwordHashing(pass []byte) string {
+
+	hashed_pass, err := bcrypt.GenerateFromPassword(pass, 8)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return string(hashed_pass)
+}
+
+// output html view generic
 func OutputHTML(w http.ResponseWriter, filename string, data interface{}) {
 	t, err := template.ParseFiles(filename)
 	if err != nil {
