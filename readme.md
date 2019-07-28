@@ -6,17 +6,14 @@ I wont be developing front-end pages, I will get them from other github packages
 
 I will try to follow [golang-standards](https://github.com/golang-standards/project-layout) for development.
 
+## Technologies
 
-### Technologies
 I will use following technologies to build my project.
 
 * Docker
 * MySQL
 * HTML/CSS
 
-
 ##### Useful Links
 
 [How to validate email address in golang](https://www.socketloop.com/tutorials/golang-validate-email-address-with-regular-expression)
-
-
