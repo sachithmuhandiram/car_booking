@@ -1,6 +1,7 @@
 package main
 
 import (
+	"/userregister"
 	"database/sql"
 	"fmt"
 	"html/template"
@@ -31,7 +32,7 @@ func main() {
 	http.HandleFunc("/", userLoginView)
 	http.HandleFunc("/login", userLoginData)
 	http.HandleFunc("/get_email", getEmailView)
-	http.HandleFunc("/register", userregister.getEmail)
+	http.HandleFunc("/register", userregister.GetEmail)
 	http.ListenAndServe(":8080", nil)
 
 }

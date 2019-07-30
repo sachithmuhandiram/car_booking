@@ -8,7 +8,7 @@ import (
 )
 
 // user data retrival functions
-func getEmail(register_response http.ResponseWriter, register_request *http.Request) {
+func GetEmail(register_response http.ResponseWriter, register_request *http.Request) {
 	valid_email := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`) // regex to validate email address
 
 	if register_request.Method != "POST" {
