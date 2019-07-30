@@ -6,7 +6,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"userregister"
+
+	"./packages/userregister"
 
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
@@ -31,8 +32,8 @@ func init() {
 func main() {
 	http.HandleFunc("/", userLoginView)
 	http.HandleFunc("/login", userLoginData)
-	http.HandleFunc("/get_email", getEmailView)
-	http.HandleFunc("/register", userregister.GetEmail)
+	http.HandleFunc("/register", getEmailView)
+	http.HandleFunc("/register_user", userregister.GetEmail)
 	http.ListenAndServe(":8080", nil)
 
 }

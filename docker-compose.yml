@@ -4,7 +4,7 @@ services:
   car_booking:
     image: golang:alpine
     build:
-      context: ./build/package
+      context: ./build
       dockerfile: Dockerfile
     volumes:
       - .:/go/src/car_booking
