@@ -1,12 +1,12 @@
 package main
 
 import (
-	"/userregister"
 	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"userregister"
 
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
