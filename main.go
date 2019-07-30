@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"regexp"
 
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
@@ -31,8 +30,8 @@ func init() {
 func main() {
 	http.HandleFunc("/", userLoginView)
 	http.HandleFunc("/login", userLoginData)
-	http.HandleFunc("/user_register", userRegisterView)
-	http.HandleFunc("/register", userRegister)
+	http.HandleFunc("/get_email", getEmailView)
+	http.HandleFunc("/register", userregister.getEmail)
 	http.ListenAndServe(":8080", nil)
 
 }
@@ -42,29 +41,8 @@ func userLoginView(reswt http.ResponseWriter, req *http.Request) {
 	OutputHTML(reswt, "ui/login.html", nil)
 }
 
-func userRegisterView(register_response http.ResponseWriter, register_request *http.Request) {
+func getEmailView(register_response http.ResponseWriter, register_request *http.Request) {
 	OutputHTML(register_response, "ui/send_verification_email.html", nil)
-}
-
-// user data retrival functions
-func userRegister(register_response http.ResponseWriter, register_request *http.Request) {
-	valid_email := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`) // regex to validate email address
-
-	if register_request.Method != "POST" {
-		log.Panic("Form data is not Post")
-		http.Redirect(register_response, register_request, "/", http.StatusSeeOther)
-	}
-	email := register_request.FormValue("email")
-
-	fmt.Println("Email address : ", email)
-
-	if valid_email.MatchString(email) {
-		fmt.Println("Valida email")
-		sendRegisterEmail(email)
-	} else {
-		fmt.Println("Wrong email")
-	}
-
 }
 
 func userLoginData(login_response http.ResponseWriter, login_request *http.Request) {
@@ -107,10 +85,6 @@ func userLogin(user_name string, password string) {
 	fmt.Println("User name and password", user_name, password)
 
 	defer db.Close()
-
-}
-
-func sendRegisterEmail(email string) {
 
 }
 
