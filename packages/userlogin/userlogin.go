@@ -17,6 +17,7 @@ type users struct {
 }
 
 func UserLoginData(login_response http.ResponseWriter, login_request *http.Request) {
+
 	if login_request.Method != "POST" {
 		log.Panic("Form data is not Post")
 		http.Redirect(login_response, login_request, "/", http.StatusSeeOther)
@@ -25,14 +26,12 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 	user_name := login_request.FormValue("username")
 	password := login_request.FormValue("password")
 	remember_me := login_request.FormValue("remember_me")
+	//p := []byte(password)
+	//hashed_password := passwordHashing(p)
 
-	hashed_password := passwordHashing([]byte(password))
-	// fmt.Println("User Name : ", user_name)
-	// fmt.Println("Password : ", password)
 	fmt.Println("Rember me  : ", remember_me)
-	// fmt.Println("hashed password   : ", hashed_password)
 
-	userLogin(user_name, hashed_password)
+	userLogin(user_name, password)
 
 }
 
@@ -42,9 +41,6 @@ func userLogin(user_name string, password string) {
 
 	db, _ := sql.Open("mysql", "root:7890@tcp(127.0.0.1:3306)/car_booking_users")
 
-	// var databaseUsername string
-	// var databasePassword string
-
 	read_error := db.QueryRow("SELECT id,password FROM car_booking_users WHERE username=?", user_name).Scan(&login_user.id, &login_user.password)
 
 	if read_error != nil {
@@ -52,11 +48,11 @@ func userLogin(user_name string, password string) {
 		log.Println("data can not be taken")
 		return
 	}
-	p := []byte(password)
-	fmt.Println("database password : ", login_user.password)
-	fmt.Println("my password", passwordHashing(p))
-	//	hashed_password, _ := bcrypt.GenerateFromPassword([]byte(password), 8)
-	compare_password := bcrypt.CompareHashAndPassword([]byte(login_user.password), p)
+
+	compare_password := bcrypt.CompareHashAndPassword([]byte(login_user.password), []byte(password))
+
+	// https://stackoverflow.com/questions/52121168/bcrypt-encryption-different-every-time-with-same-input
+
 	// fmt.Println("Hashed user input", hashed_password)
 
 	//fmt.Println("compared password :", compare_password)
@@ -77,6 +73,5 @@ func passwordHashing(pass []byte) string {
 	if err != nil {
 		log.Println(err)
 	}
-
 	return string(hashed_pass)
 }
