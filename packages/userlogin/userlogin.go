@@ -23,16 +23,22 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 		http.Redirect(login_response, login_request, "/", http.StatusSeeOther)
 	}
 
-	user_name := login_request.FormValue("username")
-	password := login_request.FormValue("password")
-	remember_me := login_request.FormValue("remember_me")
-	//p := []byte(password)
-	//hashed_password := passwordHashing(p)
+	cookie, cookie_error := login_request.Cookie("login-cookie")
 
-	fmt.Println("Rember me  : ", remember_me)
+	if cookie_error != nil {
+		log.Fatal("Cookies dont match")
+	} else {
+		log.Println("Got cookie : ", cookie)
+		user_name := login_request.FormValue("username")
+		password := login_request.FormValue("password")
+		remember_me := login_request.FormValue("remember_me")
+		//p := []byte(password)
+		//hashed_password := passwordHashing(p)
 
-	userLogin(user_name, password)
+		fmt.Println("Rember me  : ", remember_me)
 
+		userLogin(user_name, password)
+	}
 }
 
 // user data processing functions
@@ -64,7 +70,7 @@ func userLogin(user_name string, password string) {
 }
 
 // internal functions
-func passwordHashing(pass []byte) string {
+func PasswordHashing(pass []byte) string {
 
 	hashed_pass, err := bcrypt.GenerateFromPassword(pass, 8)
 	if err != nil {

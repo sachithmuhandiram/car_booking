@@ -29,6 +29,12 @@ func main() {
 
 // html views
 func userLoginView(reswt http.ResponseWriter, req *http.Request) {
+	user_login_cookie := userlogin.PasswordHashing([]byte("test_value")) // this must change to random later
+
+	http.SetCookie(reswt, &http.Cookie{
+		Name:  "login-cookie",
+		Value: user_login_cookie,
+	})
 	OutputHTML(reswt, "ui/login.html", nil)
 }
 
