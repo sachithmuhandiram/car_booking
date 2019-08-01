@@ -16,6 +16,8 @@ I will use following technologies to build my project.
 
 ##### Useful Links
 
+[Essential go](https://www.programming-books.io/essential/go/)
+
 [Micro Service Architecture](https://www.oreilly.com/library/view/software-architecture-patterns/9781491971437/ch04.html#idp1166176)
 
 [Effectively communicate between Microservices](https://itnext.io/effectively-communicate-between-microservices-de7252ba2f3c)
@@ -25,6 +27,8 @@ I will use following technologies to build my project.
 [Hashing password in golang](https://medium.com/@jcox250/password-hash-salt-using-golang-b041dc94cb72)
 
 [Password encryption](https://www.sohamkamani.com/blog/2017/01/01/web-security-password-storage/)
+
+[SQL injection static analytic](https://github.com/stripe/safesql)
 
 [Container Handling](https://medium.com/hackernoon/monitoring-containerized-microservices-with-a-centralized-logging-architecture-ba6771c1971a)
 

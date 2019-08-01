@@ -53,9 +53,6 @@ func userLogin(user_name string, password string) {
 
 	// https://stackoverflow.com/questions/52121168/bcrypt-encryption-different-every-time-with-same-input
 
-	// fmt.Println("Hashed user input", hashed_password)
-
-	//fmt.Println("compared password :", compare_password)
 	if compare_password != nil {
 		log.Println("Wrong user name password")
 	} else {
