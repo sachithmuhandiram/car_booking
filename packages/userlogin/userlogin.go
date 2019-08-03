@@ -82,11 +82,10 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 
 		user_login := userLogin(user_name, password, cookie.Value)
 
-		fmt.Println("User Login", user_login)
-
 		if user_login {
 			http.Redirect(login_response, login_request, "/home", http.StatusSeeOther)
 		} else {
+			// This is where I need to modify not to generate new token for login
 			http.Redirect(login_response, login_request, "/", http.StatusSeeOther)
 		}
 	}
