@@ -16,10 +16,10 @@ I will use following technologies to build my project.
 
 ### To Do
 
-[ ] - Block account after 5 failed login attempts.
-[ ] - Create a session table and insert data to to it, update initial_login page with event id.
-[ ] - Removing older tokens from initil_login table after certain time period.
-[ ] - Deleting session after certain time from logged users table.
+- [ ] - Block account after 5 failed login attempts.
+- [ ] - Create a session table and insert data to to it, update initial_login page with event id.
+- [ ] - Removing older tokens from initil_login table after certain time period.
+- [ ] - Deleting session after certain time from logged users table.
 
 #### Useful Links
 
