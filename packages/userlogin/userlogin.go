@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,6 +17,48 @@ type users struct {
 	password string //`json:"password"`
 }
 
+type user_login_struct struct {
+	event_id int
+	token    string
+	used     bool
+}
+
+// database connection
+func dbConn() (db *sql.DB) {
+	db, err := sql.Open("mysql", "root:7890@tcp(127.0.0.1:3306)/car_booking_users")
+
+	if err != nil {
+		log.Println("Can not open database connection")
+	}
+	return db
+}
+
+// initial token insert
+func InitialToken(user_login_cookie string) {
+	db := dbConn()
+	defer db.Close()
+
+	dt := time.Now()
+	//Format MM-DD-YYYY
+	date_time := dt.Format("2006-01-01 15:04:05.99999")
+	log.Println("current date time", date_time)
+	token_insert, tp_error := db.Prepare("insert into user_initial_login (token,created_date) values(?,?)")
+
+	if tp_error != nil {
+		log.Println("Error prepairing initial token to table")
+	}
+
+	in_res, in_err := token_insert.Exec(user_login_cookie, date_time)
+
+	if in_err != nil {
+		log.Println("Coulnd insert data to table", in_res)
+		panic(in_err.Error())
+	}
+	log.Println("Initial Token inserted ", user_login_cookie)
+
+	defer token_insert.Close()
+
+}
 func UserLoginData(login_response http.ResponseWriter, login_request *http.Request) {
 
 	if login_request.Method != "POST" {
@@ -34,7 +77,7 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 		remember_me := login_request.FormValue("remember_me")
 		fmt.Println("Rember me  : ", remember_me)
 
-		user_login := userLogin(user_name, password)
+		user_login := userLogin(user_name, password, cookie)
 
 		fmt.Println("User Login", user_login)
 
@@ -50,10 +93,21 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 }
 
 // user data processing functions
-func userLogin(user_name string, password string) bool {
+func userLogin(user_name string, password string, cookie *http.Cookie) bool {
 	var login_user users
+	var user_initial user_login_struct
 
 	db, _ := sql.Open("mysql", "root:7890@tcp(127.0.0.1:3306)/car_booking_users")
+
+	// login page defined token checking
+	login_token_check := db.QueryRow("SELECT id,password FROM user_initial_login WHERE token=?", cookie).Scan(&user_initial.event_id, &user_initial.used)
+
+	if login_token_check != nil {
+		log.Println("user_initial_login table read faild") // posible system error or hacking attempt ?
+		return false
+	}
+
+	// end login page token checking
 
 	read_error := db.QueryRow("SELECT id,password FROM car_booking_users WHERE username=?", user_name).Scan(&login_user.id, &login_user.password)
 	defer db.Close()

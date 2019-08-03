@@ -34,11 +34,15 @@ func userLoginView(reswt http.ResponseWriter, req *http.Request) {
 		Here I am using a custom cookie and its used before user login. This is add purely for learning purposes.
 	*/
 	user_login_cookie := userlogin.PasswordHashing([]byte("test_value")) // this must change to random later
+	userlogin.InitialToken(user_login_cookie)
 
 	http.SetCookie(reswt, &http.Cookie{
 		Name:  "login-cookie",
 		Value: user_login_cookie,
 	})
+
+	// insert initial token to table
+
 	OutputHTML(reswt, "ui/login.html", nil)
 }
 
