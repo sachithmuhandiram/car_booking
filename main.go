@@ -23,12 +23,16 @@ func main() {
 	http.HandleFunc("/login", userlogin.UserLoginData)
 	http.HandleFunc("/register", getEmailView)
 	http.HandleFunc("/register_user", userregister.GetEmail)
+	http.HandleFunc("/home", userHomeView)
 	http.ListenAndServe(":8080", nil)
 
 }
 
 // html views
 func userLoginView(reswt http.ResponseWriter, req *http.Request) {
+	/*
+		Here I am using a custom cookie and its used before user login. This is add purely for learning purposes.
+	*/
 	user_login_cookie := userlogin.PasswordHashing([]byte("test_value")) // this must change to random later
 
 	http.SetCookie(reswt, &http.Cookie{
@@ -40,6 +44,10 @@ func userLoginView(reswt http.ResponseWriter, req *http.Request) {
 
 func getEmailView(register_response http.ResponseWriter, register_request *http.Request) {
 	OutputHTML(register_response, "ui/send_verification_email.html", nil)
+}
+
+func userHomeView(home_response http.ResponseWriter, home_request *http.Request) {
+	OutputHTML(home_response, "ui/user_home.html", nil)
 }
 
 // output html view generic
