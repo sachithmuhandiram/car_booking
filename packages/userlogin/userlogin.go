@@ -39,9 +39,9 @@ func InitialToken(user_login_cookie string) {
 	defer db.Close()
 
 	dt := time.Now()
-	//Format MM-DD-YYYY
+
 	date_time := dt.Format("2006-01-01 15:04:05.99999")
-	log.Println("current date time", date_time)
+
 	token_insert, tp_error := db.Prepare("insert into user_initial_login (token,created_date) values(?,?)")
 
 	if tp_error != nil {
@@ -59,6 +59,7 @@ func InitialToken(user_login_cookie string) {
 	defer token_insert.Close()
 
 }
+
 func UserLoginData(login_response http.ResponseWriter, login_request *http.Request) {
 
 	if login_request.Method != "POST" {
@@ -67,6 +68,8 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 	}
 
 	cookie, cookie_error := login_request.Cookie("login-cookie") // returns cookie or an error
+
+	// check incoming cookie with db
 
 	if cookie_error != nil {
 		log.Fatal("Cookies dont match")
@@ -77,7 +80,7 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 		remember_me := login_request.FormValue("remember_me")
 		fmt.Println("Rember me  : ", remember_me)
 
-		user_login := userLogin(user_name, password, cookie)
+		user_login := userLogin(user_name, password, cookie.Value)
 
 		fmt.Println("User Login", user_login)
 
@@ -93,20 +96,36 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 }
 
 // user data processing functions
-func userLogin(user_name string, password string, cookie *http.Cookie) bool {
+func userLogin(user_name string, password string, cookie string) bool {
 	var login_user users
 	var user_initial user_login_struct
 
-	db, _ := sql.Open("mysql", "root:7890@tcp(127.0.0.1:3306)/car_booking_users")
+	db := dbConn()
 
 	// login page defined token checking
-	login_token_check := db.QueryRow("SELECT id,password FROM user_initial_login WHERE token=?", cookie).Scan(&user_initial.event_id, &user_initial.used)
+	login_token_check := db.QueryRow("SELECT event_id,used FROM user_initial_login WHERE token=? and used=0", cookie).Scan(&user_initial.event_id, &user_initial.used)
 
 	if login_token_check != nil {
 		log.Println("user_initial_login table read faild") // posible system error or hacking attempt ?
+		log.Println(login_token_check)
 		return false
 	}
 
+	// update initial user details table
+	initial_update, init_err := db.Prepare("update user_initial_login set used=1 where event_id=?")
+
+	if init_err != nil {
+		log.Println("Couldnt update initial user table")
+		return false // we shouldnt compare password
+	}
+
+	_, update_err := initial_update.Exec(user_initial.event_id)
+
+	if update_err != nil {
+		log.Println("Couldnt execute initial update")
+
+	}
+	log.Printf("Initial table updated for event id %d : ", user_initial.event_id)
 	// end login page token checking
 
 	read_error := db.QueryRow("SELECT id,password FROM car_booking_users WHERE username=?", user_name).Scan(&login_user.id, &login_user.password)
@@ -122,6 +141,11 @@ func userLogin(user_name string, password string, cookie *http.Cookie) bool {
 	// https://stackoverflow.com/questions/52121168/bcrypt-encryption-different-every-time-with-same-input
 
 	if compare_password != nil {
+		/*
+			Here I need to find a way to make sure that initial token is not get created each time wrong username password
+
+			Also Need to implement a way to restrict accessing after 5 attempts
+		*/
 		log.Println("Wrong user name password")
 		return false
 	} else {
