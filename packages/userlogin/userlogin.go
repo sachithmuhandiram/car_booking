@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -80,7 +81,7 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 		remember_me := login_request.FormValue("remember_me")
 		fmt.Println("Rember me  : ", remember_me)
 
-		user_login := userLogin(user_name, password, cookie.Value)
+		user_login := userLoginProcessing(user_name, password, cookie.Value)
 
 		if user_login {
 			http.Redirect(login_response, login_request, "/home", http.StatusSeeOther)
@@ -95,7 +96,7 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 }
 
 // user data processing functions
-func userLogin(user_name string, password string, cookie string) bool {
+func userLoginProcessing(user_name string, password string, cookie string) bool {
 	var login_user users
 	var user_initial user_login_struct
 
@@ -148,6 +149,10 @@ func userLogin(user_name string, password string, cookie string) bool {
 		log.Println("Wrong user name password")
 		return false
 	} else {
+		/*
+			Password matches, insert jwt and details to user_session table.
+			Update initial loging table setting used=1 and next event id
+		*/
 		log.Println("Hurray")
 		return true
 	}
@@ -162,4 +167,27 @@ func PasswordHashing(pass []byte) string {
 		log.Println(err)
 	}
 	return string(hashed_pass)
+}
+
+/*
+	This will generate a JWT for a user seassion. Here I use initially generate token as an input.
+	Also the time needs to keep token.
+*/
+func GenerateJWT(initial_token string, login_time int) (string, error) {
+
+	login_key := []byte(initial_token)
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+
+	claims["authorized"] = true
+	claims["exp"] = time.Now().Add(time.Minute * time.Duration(login_time))
+
+	jwt_token, jwt_err := token.SignedString(login_key)
+
+	if jwt_err != nil {
+		log.Println("Error creating jwt Token : ", jwt_err)
+		return "", jwt_err
+	}
+
+	return jwt_token, nil
 }
