@@ -84,6 +84,23 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 		user_login := userLoginProcessing(user_name, password, cookie.Value)
 
 		if user_login {
+			/*
+				Password matches, insert jwt and details to user_session table.
+				Update initial loging table setting used=1 and next event id
+			*/
+			jwt, jwt_err := GenerateJWT(cookie.Value, 30) // for now its 30min session
+
+			if jwt_err != nil {
+				log.Println("Can not generate jwt token", jwt_err)
+			}
+
+			log.Println(jwt)
+
+			http.SetCookie(login_response, &http.Cookie{
+				Name:  "user-cookie",
+				Value: jwt,
+			})
+
 			http.Redirect(login_response, login_request, "/home", http.StatusSeeOther)
 		} else {
 			// This is where I need to modify not to generate new token for login
@@ -149,10 +166,7 @@ func userLoginProcessing(user_name string, password string, cookie string) bool 
 		log.Println("Wrong user name password")
 		return false
 	} else {
-		/*
-			Password matches, insert jwt and details to user_session table.
-			Update initial loging table setting used=1 and next event id
-		*/
+
 		log.Println("Hurray")
 		return true
 	}
