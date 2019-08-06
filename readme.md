@@ -42,3 +42,5 @@ I will use following technologies to build my project.
 [HTML rendering in golang](https://stackoverflow.com/questions/57192773/how-to-use-html-with-golang/57195826)
 
 [Memory leakage](https://medium.com/free-code-camp/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase-4bec4325e192)
+
+[Golang SQL Samples](https://github.com/go-sql-driver/mysql/wiki/Examples)

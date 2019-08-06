@@ -63,6 +63,8 @@ func InitialToken(user_login_cookie string) {
 
 func UserLoginData(login_response http.ResponseWriter, login_request *http.Request) {
 
+	var userSessioneventID int
+
 	if login_request.Method != "POST" {
 		log.Panic("Form data is not Post")
 		http.Redirect(login_response, login_request, "/", http.StatusSeeOther)
@@ -116,28 +118,40 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 				log.Println("Couldnt insert data to user_session table")
 			}
 
-			insertTableValues, insertErr := insertSession.Exec(userName, jwt, loginTime, loginTime)
+			_, insertErr := insertSession.Exec(userName, jwt, loginTime, loginTime)
 
 			if insertErr != nil {
 				log.Println("Couldnt execute insert to user_session table")
 
 			}
 			log.Printf("Data inserted to user_session table for User : %s : ", userName)
-			log.Println("Insert table values : ", insertTableValues)
-			// update initial user details table
-			// initialUpdate, initErr := db.Prepare("update user_initial_login set next_event_id=? where event_id=?")
 
-			// if initErr != nil {
-			// 	log.Println("Couldnt update initial user table")
-			// }
+			getEventID, eventIDError := db.Prepare("select event_id from user_session where user_name=? and expired=0")
 
-			// _, updateErr := initialUpdate.Exec(sessionID, eventID)
+			if eventIDError != nil {
+				log.Println("Couldnt get event_id from user_session table")
+			}
+			inErr := getEventID.QueryRow(userName).Scan(&userSessioneventID) // WHERE number = 1
+			if inErr != nil {
+				panic(inErr.Error()) // proper error handling instead of panic in your app
+			}
 
-			// if updateErr != nil {
-			// 	log.Println("Couldnt execute initial update")
+			log.Println("Event ID in user session table :", userSessioneventID)
 
-			// }
-			// log.Printf("Initial table updated for event id %d : ", eventID)
+			//update initial user details table
+			initialUpdate, initErr := db.Prepare("update user_initial_login set next_event_id=? where event_id=?")
+
+			if initErr != nil {
+				log.Println("Couldnt update initial user table")
+			}
+
+			_, updateErr := initialUpdate.Exec(userSessioneventID, eventID)
+
+			if updateErr != nil {
+				log.Println("Couldnt execute initial update")
+
+			}
+			log.Printf("Initial table updated for event id %d : ", eventID)
 
 			log.Println(eventID)
 
@@ -210,7 +224,7 @@ func userLoginProcessing(user_name string, password string, cookie string) (bool
 	} //else {
 
 	log.Println("Hurray")
-	return true, 0
+	return true, user_initial.event_id
 	//}
 
 }
