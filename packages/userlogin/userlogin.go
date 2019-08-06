@@ -41,7 +41,7 @@ func InitialToken(user_login_cookie string) {
 
 	dt := time.Now()
 
-	date_time := dt.Format("2006-01-01 15:04:05.99999")
+	dateTime := dt.Format("2006-01-01 15:04:05.99999")
 
 	token_insert, tp_error := db.Prepare("insert into user_initial_login (token,created_date) values(?,?)")
 
@@ -49,7 +49,7 @@ func InitialToken(user_login_cookie string) {
 		log.Println("Error prepairing initial token to table")
 	}
 
-	in_res, in_err := token_insert.Exec(user_login_cookie, date_time)
+	in_res, in_err := token_insert.Exec(user_login_cookie, dateTime)
 
 	if in_err != nil {
 		log.Println("Coulnd insert data to table", in_res)
@@ -76,12 +76,12 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 		log.Fatal("Cookies dont match")
 	} else {
 		log.Println("Got cookie : ", cookie)
-		user_name := login_request.FormValue("username")
+		userName := login_request.FormValue("username")
 		password := login_request.FormValue("password")
 		remember_me := login_request.FormValue("remember_me")
 		fmt.Println("Rember me  : ", remember_me)
 
-		user_login := userLoginProcessing(user_name, password, cookie.Value)
+		user_login, eventID := userLoginProcessing(userName, password, cookie.Value)
 
 		if user_login {
 			/*
@@ -94,12 +94,52 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 				log.Println("Can not generate jwt token", jwt_err)
 			}
 
-			log.Println(jwt)
-
 			http.SetCookie(login_response, &http.Cookie{
 				Name:  "user-cookie",
 				Value: jwt,
+				Path:  "/home",
 			})
+
+			/*
+				Inserting user_session and updating initial table
+			*/
+			t := time.Now()
+
+			loginTime := t.Format("2006-01-01 15:04:05.99999")
+			db := dbConn()
+
+			defer db.Close()
+			// inserting data to user_session
+			insertSession, sessionErr := db.Prepare("insert into user_session (user_name,jwt,first_login,last_login) values(?,?,?,?)")
+
+			if sessionErr != nil {
+				log.Println("Couldnt insert data to user_session table")
+			}
+
+			insertTableValues, insertErr := insertSession.Exec(userName, jwt, loginTime, loginTime)
+
+			if insertErr != nil {
+				log.Println("Couldnt execute insert to user_session table")
+
+			}
+			log.Printf("Data inserted to user_session table for User : %s : ", userName)
+			log.Println("Insert table values : ", insertTableValues)
+			// update initial user details table
+			// initialUpdate, initErr := db.Prepare("update user_initial_login set next_event_id=? where event_id=?")
+
+			// if initErr != nil {
+			// 	log.Println("Couldnt update initial user table")
+			// }
+
+			// _, updateErr := initialUpdate.Exec(sessionID, eventID)
+
+			// if updateErr != nil {
+			// 	log.Println("Couldnt execute initial update")
+
+			// }
+			// log.Printf("Initial table updated for event id %d : ", eventID)
+
+			log.Println(eventID)
 
 			http.Redirect(login_response, login_request, "/home", http.StatusSeeOther)
 		} else {
@@ -113,11 +153,13 @@ func UserLoginData(login_response http.ResponseWriter, login_request *http.Reque
 }
 
 // user data processing functions
-func userLoginProcessing(user_name string, password string, cookie string) bool {
+func userLoginProcessing(user_name string, password string, cookie string) (bool, int) {
 	var login_user users
 	var user_initial user_login_struct
 
 	db := dbConn()
+
+	defer db.Close()
 
 	// login page defined token checking
 	login_token_check := db.QueryRow("SELECT event_id,used FROM user_initial_login WHERE token=? and used=0", cookie).Scan(&user_initial.event_id, &user_initial.used)
@@ -125,7 +167,7 @@ func userLoginProcessing(user_name string, password string, cookie string) bool 
 	if login_token_check != nil {
 		log.Println("user_initial_login table read faild") // posible system error or hacking attempt ?
 		log.Println(login_token_check)
-		return false
+		return false, 0
 	}
 
 	// update initial user details table
@@ -133,7 +175,7 @@ func userLoginProcessing(user_name string, password string, cookie string) bool 
 
 	if init_err != nil {
 		log.Println("Couldnt update initial user table")
-		return false // we shouldnt compare password
+		return false, 0 // we shouldnt compare password
 	}
 
 	_, update_err := initial_update.Exec(user_initial.event_id)
@@ -164,12 +206,12 @@ func userLoginProcessing(user_name string, password string, cookie string) bool 
 			Also Need to implement a way to restrict accessing after 5 attempts
 		*/
 		log.Println("Wrong user name password")
-		return false
-	} else {
+		return false, 0
+	} //else {
 
-		log.Println("Hurray")
-		return true
-	}
+	log.Println("Hurray")
+	return true, 0
+	//}
 
 }
 
@@ -185,16 +227,16 @@ func PasswordHashing(pass []byte) string {
 
 /*
 	This will generate a JWT for a user seassion. Here I use initially generate token as an input.
-	Also the time needs to keep token.
+	Also the time needs to keep token (valid_duration).
 */
-func GenerateJWT(initial_token string, login_time int) (string, error) {
+func GenerateJWT(initial_token string, valid_duration int) (string, error) {
 
 	login_key := []byte(initial_token)
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 
 	claims["authorized"] = true
-	claims["exp"] = time.Now().Add(time.Minute * time.Duration(login_time))
+	claims["exp"] = time.Now().Add(time.Minute * time.Duration(valid_duration))
 
 	jwt_token, jwt_err := token.SignedString(login_key)
 

@@ -39,6 +39,7 @@ func userLoginView(reswt http.ResponseWriter, req *http.Request) {
 	http.SetCookie(reswt, &http.Cookie{
 		Name:  "login-cookie",
 		Value: user_login_cookie,
+		Path:  "/",
 	})
 
 	// insert initial token to table
