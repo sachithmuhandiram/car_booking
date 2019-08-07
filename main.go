@@ -2,8 +2,10 @@ package main
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 
+	"./packages/cookiecheck"
 	"./packages/userlogin"
 	"./packages/userregister"
 	_ "github.com/go-sql-driver/mysql"
@@ -23,9 +25,21 @@ func main() {
 	http.HandleFunc("/login", userlogin.UserLoginData)
 	http.HandleFunc("/register", getEmailView)
 	http.HandleFunc("/register_user", userregister.GetEmail)
-	http.HandleFunc("/home", userHomeView)
+	http.HandleFunc("/home", checkCookie)
 	http.ListenAndServe(":8080", nil)
 
+}
+
+// internal functions
+func checkCookie(res http.ResponseWriter, req *http.Request) {
+
+	cookieSet := cookiecheck.CheckCookie(req)
+	log.Println("check cookie returns : ", cookieSet)
+
+	if cookieSet {
+		userHomeView(res, req)
+	}
+	userLoginView(res, req)
 }
 
 // html views
