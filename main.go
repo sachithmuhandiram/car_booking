@@ -38,8 +38,9 @@ func checkCookie(res http.ResponseWriter, req *http.Request) {
 
 	if cookieSet {
 		userHomeView(res, req)
+	} else {
+		userLoginView(res, req)
 	}
-	userLoginView(res, req)
 }
 
 // html views

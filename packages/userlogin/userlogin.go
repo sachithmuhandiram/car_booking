@@ -61,6 +61,7 @@ func InitialToken(userLoginCookie string) {
 
 }
 
+// UserLoginData taking and sends for processing
 func UserLoginData(loginResponse http.ResponseWriter, loginRequest *http.Request) {
 
 	var userSessioneventID int
@@ -239,9 +240,10 @@ func PasswordHashing(pass []byte) string {
 	return string(hashedPass)
 }
 
-//	GenerateJWT will generate a JWT for a user seassion. Here I use initially generate token as an input.
-//	Also the time needs to keep token (valid_duration).
-
+/*
+	GenerateJWT will generate a JWT for a user seassion. Here I use initially generate token as an input.
+	Also the time needs to keep token (valid_duration).
+*/
 func GenerateJWT(initialToken string, validDuration int) (string, error) {
 
 	loginKey := []byte(initialToken)
