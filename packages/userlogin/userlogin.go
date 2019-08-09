@@ -2,7 +2,6 @@ package userlogin
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -81,8 +80,8 @@ func UserLoginData(loginResponse http.ResponseWriter, loginRequest *http.Request
 		log.Println("Got cookie : ", cookie)
 		userName := loginRequest.FormValue("username")
 		password := loginRequest.FormValue("password")
-		rememberMe := loginRequest.FormValue("remember_me")
-		fmt.Println("Rember me  : ", rememberMe)
+		//rememberMe := loginRequest.FormValue("remember_me")
+		//fmt.Println("Rember me  : ", rememberMe)
 
 		userLogin, eventID := userLoginProcessing(userName, password, cookie.Value)
 
