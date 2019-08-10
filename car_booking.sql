@@ -1,0 +1,108 @@
+-- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
+--
+-- Host: localhost    Database: car_booking_users
+-- ------------------------------------------------------
+-- Server version	5.7.27
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `car_booking_users`
+--
+
+DROP TABLE IF EXISTS `car_booking_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `car_booking_users` (
+  `id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(30) NOT NULL,
+  `email` varchar(30) DEFAULT NULL,
+  `password` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `car_booking_users`
+--
+
+LOCK TABLES `car_booking_users` WRITE;
+/*!40000 ALTER TABLE `car_booking_users` DISABLE KEYS */;
+INSERT INTO `car_booking_users` VALUES (2,'sachith',NULL,'$2a$08$KVtTpQwdY8ZdkBcgilC2COBIIy1lOATEbmR0KmRz7hqayoG05WsTq');
+/*!40000 ALTER TABLE `car_booking_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_initial_login`
+--
+
+DROP TABLE IF EXISTS `user_initial_login`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_initial_login` (
+  `event_id` int(15) unsigned NOT NULL AUTO_INCREMENT,
+  `token` varchar(100) NOT NULL,
+  `used` tinyint(1) DEFAULT '0',
+  `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `next_event_id` int(15) DEFAULT NULL,
+  PRIMARY KEY (`event_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_initial_login`
+--
+
+LOCK TABLES `user_initial_login` WRITE;
+/*!40000 ALTER TABLE `user_initial_login` DISABLE KEYS */;
+INSERT INTO `user_initial_login` VALUES (1,'$2a$08$s32b2D6edHuuqY8e0TK.UeGgIychvcobDZekqXlesTRhL7EL3Hw..',0,'2019-08-08 16:39:29',NULL),(2,'$2a$08$aU7Fm0Q.mwsOGpOGMY6doednlx4E/BYY1dCa3pPa.h6D.d9edgtV6',0,'2019-08-08 16:48:11',NULL),(3,'$2a$08$8U/oE3cwN/oN3R1X/e8Za.Bf3nsiJiNFr3wqf/LrM7rmTMSO2/I9S',0,'2019-08-08 16:48:33',NULL),(4,'$2a$08$zKvWkC07WcppfRXNCL.0K.sCnhOXmZU7G9XCPCesZpyCaszgQQ2py',0,'2019-08-08 16:50:12',NULL),(5,'$2a$08$qujuiZjxAxpV/ByozPNU.eTOtrwOwiBOmFqJYZlmWvAuMdu3WMOAu',1,'2019-08-03 17:18:22',NULL),(6,'$2a$08$PCUe0orc.WdzKxrJfPwVoOfp9ZLLId8ACHY8noV2ETCSnIYoQByJq',1,'2019-08-03 17:30:45',NULL),(7,'$2a$08$gf8VaFZXG4CzqbyJxV9NAuidDPfKd08bj6zGElU1uXfHd4f7C4Sxa',1,'2019-08-03 17:31:16',NULL),(8,'$2a$08$K7UGkl/0xi1ThFBc5rBVe.xI/nAGz720.mie60HQupakNTJ9YeA8G',1,'2019-08-03 17:31:41',NULL),(9,'$2a$08$kSTOa/.lZtuVmHCabvcNtufsyPCpkWoTIWrbm1N4yrB/L5oHjyKOO',0,'2019-08-08 15:58:05',NULL),(10,'$2a$08$FX5wD0x9FJ6pJls3IuNN0./.hi5wKCTAL5ZVlNRViYmFPqIOnfeii',0,'2019-08-08 15:58:05',NULL),(11,'$2a$08$70gtIPSnsTINAkktOXqNlu1l3.791esIa7dCJl4/1iSnf5A7876Cq',1,'2019-08-05 15:58:12',NULL),(12,'$2a$08$/moNJ3fmB0fK2ZZBqBh1puQGowfM/skVzgOYzYdY0acxQqbdY4ASC',1,'2019-08-05 16:03:39',NULL),(13,'$2a$08$/kAmQDqgXg6aKnGPG808w.8CG4WZmqIEn5lVxZ2jpr7gGpNCk7Xky',1,'2019-08-05 16:16:22',NULL),(14,'$2a$08$AKdnUmVfepbyzW//sDFLquUQkRDNKp7pP0WnW7EoSmBtKZ.dBAwKa',0,'2019-08-08 05:56:35',NULL),(15,'$2a$08$Fgi19xLQzDDRfhtTEGIopuao.RjdkVAxL8h6oUeRWPG/zujf8ofiy',0,'2019-08-08 05:56:37',NULL),(16,'$2a$08$EQOPSARS0BlNSzlQT9K4.ujJFjPSyVpUFbFbYZwgeX//5DQsOI1sK',1,'2019-08-06 05:56:46',NULL),(17,'$2a$08$ZAmYkbjSBs4PPAkz0NjccOBkIXhjxOQstrfdPXiwwHOFBwnq9ah9e',1,'2019-08-06 05:57:08',NULL),(18,'$2a$08$lwKhT879SlqUozb.GYBoMuW64Ep0CWa6/jXPlV7XYRDWFn4MV660a',0,'2019-08-08 05:57:08',NULL),(19,'$2a$08$F55Wc3CLPvAGQbvOsZTv..6D3oWaC0liGBO0qq9pYDAvXy6HzZHQK',0,'2019-08-08 15:19:17',NULL),(20,'$2a$08$jmzpTzfKzGIXuSjYXSM/ouJQFXAbfUOdqtDzpS7SAZTZWYZ4gkzkq',0,'2019-08-08 15:19:18',NULL),(21,'$2a$08$h2B965R8xZjOKaJhyCvjre73TC8TwZ8J.jXJuyTS5nPX6KGQdbAoK',0,'2019-08-08 15:19:18',NULL),(22,'$2a$08$TIZ2BHaN4GBbYqWugHrYHuavaZ6fbGMbQrZcgNoC.8dc232XPpjmC',1,'2019-08-06 15:20:35',NULL),(23,'$2a$08$HgkQNDNE3pbK9/.gGMVN0ece7T.6iNInZawCqcpbCbs6i7B0xJQ.q',1,'2019-08-06 15:39:01',NULL),(24,'$2a$08$wVDTq6u5OyfjHk5Cl5/gyO78VsOCET/5Nlj5RerKxPN51FM8bsRvK',0,'2019-08-08 15:40:00',NULL),(25,'$2a$08$Th3MF4LeaO7iugMjtPWSle3j8bbWoEF529vpVtOuMpIfZEl0OX3k6',1,'2019-08-06 15:40:27',NULL),(26,'$2a$08$vuzamzBW7jZrlBtmPwM46.w9GEaocINkreeiC0Il4Kno4H3PBWqKa',1,'2019-08-06 15:51:57',NULL),(27,'$2a$08$w0clry8TM6DD7xy8lrMOd.U0e8K76spkgdIHRNpy3KTU92Chdvgvi',1,'2019-08-06 15:52:15',NULL),(28,'$2a$08$q4oAwCc/V/C8Q8/oHWsw2exkqoqDvn4/.YFhSBKMiBlTUddz2.vty',1,'2019-08-06 16:48:48',NULL),(29,'$2a$08$mQfLb3v9tAsrR..oQydzP.//qj5YWkvfb74UJ3vxlEE0j3LQhVZZ6',1,'2019-08-06 16:49:01',NULL),(30,'$2a$08$fmnDhxG7.2jzoJCwyLPusuUz4eEojA9HQJEQAxt/5I54gMhcUh./.',0,'2019-08-08 16:49:02',NULL),(31,'$2a$08$NCTa3dwBxtRnk4tTXJ4g/Ou9Ejr1/xwweZ3mKz0GDZ6aPTb4JLno.',1,'2019-08-06 16:50:41',NULL),(32,'$2a$08$cpnVuHehRne0dtZGpaP2nu7y0/1Rxp3ebrak3xahZ0xyyOB3ud8CK',0,'2019-08-08 16:50:42',NULL),(33,'$2a$08$8Vnz9I71Xzbv9t8rWNFuyOcHokvhdHiyYcLkC99K0hmNBNawFRf8e',1,'2019-08-06 16:54:25',NULL),(34,'$2a$08$.G.N7sXHX0JaEdWkvePKu.AcMWgxXsvFoYI9iUGU2blUXPg49enMi',0,'2019-08-08 16:54:25',NULL),(35,'$2a$08$r8U4.xWYqq8tekzRUlqzV.NxqDGnMeWA9undy.AVSc0op1ax75sh6',1,'2019-08-06 16:56:06',NULL),(36,'$2a$08$.Z36S5TwJJHhUyWYGYIjh.Q4cbHGA.29uCo8Jq2Jph.YmgEZyZFN2',0,'2019-08-08 16:56:07',NULL),(37,'$2a$08$PQIW5sAr0iSln8pVY5EDVOEh6BU9xfIYqyh59n3rM4K8tVonUCvYK',1,'2019-08-06 16:57:06',NULL),(38,'$2a$08$rRx9FVF.h0ABbzAgcH17SOhYKHFqJNyJLlO0vUMbKfcUpQ9ztm/w2',1,'2019-08-06 17:15:37',NULL),(39,'$2a$08$kHhNSp0.HCo8Gm9.qryByOcFwlB8nF4CM1e.IZ2.Hplq68CGhLIjW',0,'2019-08-08 17:15:38',NULL),(40,'$2a$08$cU2Fm60ol5RW/KotbVttnOuBHELwBPsJop.6dPHsbYwAAg6M9CRVG',1,'2019-08-06 17:18:44',NULL),(41,'$2a$08$.gn4ORIrfzt1qmsqgrGADeWw8pLh0Goyrx/cbXSUR.BXtjaPzDF1a',1,'2019-08-06 17:32:52',1),(42,'$2a$08$C7AGXzpeZ.zL9mbuw/yzLeqDMi1K7pdzqVf3oLplWZAyZZWBkmFoy',1,'2019-08-06 17:34:40',5),(43,'$2a$08$ctyDvjDkmm5cbFrOLwIwJ.4jqjTp4at3q5tj1rlmd0fbrZAB8TmLu',0,'2019-08-08 00:39:12',NULL),(44,'$2a$08$FORzIMImCYdkhfedB44n1OewADruH1/qpDbIH7F9.2ujnrK8wGpSa',0,'2019-08-08 00:39:12',NULL),(45,'$2a$08$XhThO5MFfKihnIvFL5Q4ROgARmf2IDNxSerNBilQVlpgEdLJg6Bu2',0,'2019-08-08 00:39:12',NULL),(46,'$2a$08$cKvN26w4gda92VB99yLnDeRwqeQUIjyYPBMV1sxaTud4yJl6K8y2q',0,'2019-08-08 00:40:04',NULL),(47,'$2a$08$LctUrBwOVeTCiNrKkBLjI.IEKTqdGcArpbb8bGKt14tifFQfD6N86',0,'2019-08-08 15:21:52',NULL),(48,'$2a$08$KblzsWV8lVPBTP0wdTq6WOay9qwVOaI2jc6Wnykiv4bTeGQ9pg5dS',0,'2019-08-08 15:21:52',NULL),(49,'$2a$08$F0g4tkSWd/dTm6aVw8JDh.u4JOx/bKmQl4H2E5YHyoYRH8OFqckUW',1,'2019-08-07 15:22:07',5),(50,'$2a$08$Iks31nDC4z8RaBFQReFr0.4mgjH7wZkdojmAbzAfVsvAJ7gKunu.e',0,'2019-08-08 15:22:07',NULL),(51,'$2a$08$AJzgzvpwOxzc1sNC6FNvQu/WLmvo8ULLXeaLEdv7Pqjwz3r1Q5IlK',1,'2019-08-07 15:23:28',5),(52,'$2a$08$DOHUSoZTQevMzJWkuTIyhey0H63z48EV/UEbIOwXvZ6FAQo8.k4WG',0,'2019-08-08 15:24:34',NULL),(53,'$2a$08$X.wtzhXTxUuid6OzrGBan.u.xdcLS92tSOiTDL7k4fLGHUsKGXCbu',1,'2019-08-07 16:05:45',NULL),(54,'$2a$08$Xz5L78XH0q3SrkvmqZRnuuCYb0In2kB4AQk2oilBmuo8h3.UDkzK.',1,'2019-08-07 16:05:56',5),(55,'$2a$08$h9Fy0KuZl835LixaTdBJ3Ov6..6bAuQJuXUAqb.nFfprjd042lvnO',0,'2019-08-07 23:36:46',NULL),(56,'$2a$08$bO4l/isE/aumF/riADAXUuqDvtZKvEfZ8HSlYh0SBHwAnGG5/DNTO',0,'2019-08-07 23:36:47',NULL),(57,'$2a$08$FsM/1zGr760QoISgG1q/Sut8BMwFEIF.c/G35c5dkNDj31z72W0/a',1,'2019-08-07 23:37:16',5),(58,'$2a$08$f2k0KgAZggNG4AbvuBjt9ugbI3SAstKCr7nUl4S.oGxerZF3l9N0e',1,'2019-08-07 23:41:30',5),(59,'$2a$08$/EJNCEiuXBpN7cVpQvyi3OgGbrmSQtLlRDg1DUj3FOUKzQZVPGH0a',0,'2019-08-08 00:22:04',NULL),(60,'$2a$08$h4jXwNmqp.hnI/C/fh8dEOCV.UgBc24qzphXJQdxhDk9tSQX9URK2',0,'2019-08-08 00:22:05',NULL),(61,'$2a$08$aaUeDcbc9cp7Fth8EVZO2ukmNh3HEFPbV3uIMPADW75i83ziSkjfK',0,'2019-08-08 00:22:05',NULL);
+/*!40000 ALTER TABLE `user_initial_login` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_session`
+--
+
+DROP TABLE IF EXISTS `user_session`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_session` (
+  `event_id` int(6) unsigned NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(30) NOT NULL,
+  `jwt` varchar(256) NOT NULL,
+  `first_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expired` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`event_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_session`
+--
+
+LOCK TABLES `user_session` WRITE;
+/*!40000 ALTER TABLE `user_session` DISABLE KEYS */;
+INSERT INTO `user_session` VALUES (5,'sachith','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOiIyMDE5LTA4LTA2VDIzOjM0OjQwLjgwNjU2MjUyMyswNTozMCJ9.ge4cHSUXTOgoM-W8vFrFnkIenEoWtbAIx5IO9NiSC7M','2019-08-08 17:34:41','2019-08-08 17:34:41',0),(6,'sachith','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOiIyMDE5LTA4LTA3VDIxOjIyOjA3LjA3MDI5NDA4NiswNTozMCJ9.Pnfh1iC8VBqYQc15CROY2GWW60JxPaYaB2g90yui9T8','2019-08-07 16:05:07','2019-08-08 16:02:04',1),(7,'sachith','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOiIyMDE5LTA4LTA3VDIxOjIzOjI3LjkwNDIzMDEyNiswNTozMCJ9.hZJD0hyEewOby8lnnhCrqV8mMnwLczrf0uhhEOUKqnQ','2019-08-08 15:23:28','2019-08-08 15:23:28',0),(8,'sachith','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOiIyMDE5LTA4LTA3VDIyOjA1OjU2LjA0MTYzNzI1NyswNTozMCJ9.P7XeG6MvxxIFTe3B4qiTKBB_6ZkRv1zKHQwEKIIguXk','2019-08-07 16:19:42','2019-08-08 16:19:42',0),(9,'sachith','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOiIyMDE5LTA4LTA4VDA1OjM3OjE2LjY0NzE3NjQ3MyswNTozMCJ9.Ogpt-AlYNvk4sXzDdMKOGvHlO7gu51Z-r03V8gQ32ec','2019-08-07 23:37:17','2019-08-07 23:42:08',0),(10,'sachith','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOiIyMDE5LTA4LTA4VDA1OjQxOjI5Ljk1NzU0MjA2MiswNTozMCJ9.Uc4fuNspns-xjCqsg0yxAIpKDPkvEHcV0ZIoEgA-s1s','2019-08-07 23:41:30','2019-08-07 23:45:55',0);
+/*!40000 ALTER TABLE `user_session` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-08-10 12:35:28

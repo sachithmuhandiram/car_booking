@@ -1,14 +1,26 @@
 version: '3'
 
 services:
-  car_booking:
-    image: golang:alpine
+  db:
+    image: db
     build:
-      context: ./build
+      context : build/database
+      dockerfile: Dockerfile
+    environment:
+       MYSQL_USER: root
+       MYSQL_ROOT_PASSWORD: '7890'
+    ports:
+       - "3306"
+    tty: true
+
+  car_booking:
+    image: car_booking
+    build:
+      context: build
       dockerfile: Dockerfile
     volumes:
       - .:/go/src/car_booking
     ports:
-      - 3000:3000
+      - "3000:3000"
     stdin_open: true
     tty: true

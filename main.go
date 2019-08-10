@@ -26,7 +26,8 @@ func main() {
 	http.HandleFunc("/register", getEmailView)
 	http.HandleFunc("/register_user", userregister.GetEmail)
 	http.HandleFunc("/home", checkCookie)
-	http.ListenAndServe(":8080", nil)
+	http.HandleFunc("/test", testFunction)
+	http.ListenAndServe(":3000", nil)
 
 }
 
@@ -81,4 +82,9 @@ func OutputHTML(w http.ResponseWriter, filename string, data interface{}) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+}
+
+// test function
+func testFunction(t_res http.ResponseWriter, t_req *http.Request) {
+	OutputHTML(t_res, "ui/test.html", nil)
 }
