@@ -27,7 +27,7 @@ func main() {
 	http.HandleFunc("/register_user", userregister.GetEmail)
 	http.HandleFunc("/home", checkCookie)
 	http.HandleFunc("/test", testFunction)
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":8080", nil)
 
 }
 

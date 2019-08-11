@@ -1,5 +1,6 @@
-version: '3'
+version: '3.7'
 
+services:
   car_booking:
     image: car_booking
     build:
@@ -8,6 +9,5 @@ version: '3'
     volumes:
       - .:/go/src/car_booking
     ports:
-      - "3000:3000"
-    stdin_open: true
-    tty: true
+      - 8080:8080
+    
