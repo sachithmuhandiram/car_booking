@@ -8,7 +8,8 @@ I will try to follow [golang-standards](https://github.com/golang-standards/proj
 
 ## Architecture
 
-![Basic architecture](documents.Architecture.jpeg)
+![Basic architecture](documents/Architecture.jpeg)
+
 ## Technologies
 
 I will use following technologies to build my project.
@@ -20,7 +21,7 @@ I will use following technologies to build my project.
 ### To Do
 
 - [ ] - Block account after 5 failed login attempts.
-- [ x ] - Create a session table and insert data to to it, update initial_login page with event id.
+- [ X ] - Create a session table and insert data to to it, update initial_login page with event id.
 - [ ] - Removing older tokens from initil_login table after certain time period.
 - [ ] - Deleting session after certain time from logged users table.
 
