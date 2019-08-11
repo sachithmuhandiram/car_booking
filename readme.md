@@ -6,6 +6,9 @@ I wont be developing front-end pages, I will get them from other github packages
 
 I will try to follow [golang-standards](https://github.com/golang-standards/project-layout) for development.
 
+## Architecture
+
+![Basic architecture](documents.Architecture.jpeg)
 ## Technologies
 
 I will use following technologies to build my project.
@@ -17,7 +20,7 @@ I will use following technologies to build my project.
 ### To Do
 
 - [ ] - Block account after 5 failed login attempts.
-- [ ] - Create a session table and insert data to to it, update initial_login page with event id.
+- [ x ] - Create a session table and insert data to to it, update initial_login page with event id.
 - [ ] - Removing older tokens from initil_login table after certain time period.
 - [ ] - Deleting session after certain time from logged users table.
 
