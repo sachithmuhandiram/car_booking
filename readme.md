@@ -48,3 +48,5 @@ I will use following technologies to build my project.
 [Memory leakage](https://medium.com/free-code-camp/how-i-investigated-memory-leaks-in-go-using-pprof-on-a-large-codebase-4bec4325e192)
 
 [Golang SQL Samples](https://github.com/go-sql-driver/mysql/wiki/Examples)
+
+[Docker localhost access](https://forums.docker.com/t/problems-with-docker-compose-sharing-port-on-local-machine/74795/4)

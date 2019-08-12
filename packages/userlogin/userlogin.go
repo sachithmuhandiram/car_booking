@@ -63,7 +63,9 @@ func InitialToken(userLoginCookie string) {
 // UserLoginData taking and sends for processing
 func UserLoginData(loginResponse http.ResponseWriter, loginRequest *http.Request) {
 
-	var userSessioneventID int
+	//var userSessioneventID int
+	db := dbConn()
+	defer db.Close()
 
 	if loginRequest.Method != "POST" {
 		log.Panic("Form data is not Post")
@@ -105,38 +107,27 @@ func UserLoginData(loginResponse http.ResponseWriter, loginRequest *http.Request
 			/*
 				Inserting user_session and updating initial table
 			*/
-			t := time.Now()
 
-			loginTime := t.Format("2006-01-01 15:04:05.99999")
-			db := dbConn()
+			loginSession, userSessionID := insertToUserSession(userName, jwt)
 
-			defer db.Close()
-			// inserting data to user_session
-			insertSession, sessionErr := db.Prepare("insert into user_session (user_name,jwt,first_login,last_login) values(?,?,?,?)")
-
-			if sessionErr != nil {
-				log.Println("Couldnt insert data to user_session table")
+			if !loginSession {
+				log.Println("Couldnt insert data to user session table")
 			}
+			/*
+				Getting event_id from user_session table
+			*/
+			log.Println("Last user session table event id :", userSessionID)
+			// getEventID, eventIDError := db.Prepare("select event_id from user_session where user_name=? and expired=0")
 
-			_, insertErr := insertSession.Exec(userName, jwt, loginTime, loginTime)
+			// if eventIDError != nil {
+			// 	log.Println("Couldnt get event_id from user_session table")
+			// }
+			// inErr := getEventID.QueryRow(userName).Scan(&userSessioneventID) // WHERE number = 1
+			// if inErr != nil {
+			// 	panic(inErr.Error()) // proper error handling instead of panic in your app
+			// }
 
-			if insertErr != nil {
-				log.Println("Couldnt execute insert to user_session table")
-
-			}
-			log.Printf("Data inserted to user_session table for User : %s : ", userName)
-
-			getEventID, eventIDError := db.Prepare("select event_id from user_session where user_name=? and expired=0")
-
-			if eventIDError != nil {
-				log.Println("Couldnt get event_id from user_session table")
-			}
-			inErr := getEventID.QueryRow(userName).Scan(&userSessioneventID) // WHERE number = 1
-			if inErr != nil {
-				panic(inErr.Error()) // proper error handling instead of panic in your app
-			}
-
-			log.Println("Event ID in user session table :", userSessioneventID)
+			// log.Println("Event ID in user session table :", userSessioneventID)
 
 			//update initial user details table
 			initialUpdate, initErr := db.Prepare("update user_initial_login set next_event_id=? where event_id=?")
@@ -145,7 +136,7 @@ func UserLoginData(loginResponse http.ResponseWriter, loginRequest *http.Request
 				log.Println("Couldnt update initial user table")
 			}
 
-			_, updateErr := initialUpdate.Exec(userSessioneventID, eventID)
+			_, updateErr := initialUpdate.Exec(userSessionID, eventID)
 
 			if updateErr != nil {
 				log.Println("Couldnt execute initial update")
@@ -172,7 +163,6 @@ func userLoginProcessing(userName string, password string, cookie string) (bool,
 	var userInitial userLoginStruct
 
 	db := dbConn()
-
 	defer db.Close()
 
 	// login page defined token checking
@@ -226,6 +216,39 @@ func userLoginProcessing(userName string, password string, cookie string) (bool,
 	log.Println("Hurray")
 	return true, userInitial.eventID
 	//}
+
+}
+
+// Insert into user_session table
+func insertToUserSession(userName string, jwt string) (bool, int) {
+
+	t := time.Now()
+	loginTime := t.Format("2006-01-01 15:04:05.99999")
+	db := dbConn()
+	defer db.Close()
+	// inserting data to user_session
+	insertSession, sessionErr := db.Prepare("insert into user_session (user_name,jwt,first_login,last_login) values(?,?,?,?)")
+
+	if sessionErr != nil {
+		log.Println("Couldnt insert data to user_session table")
+		return false, 0
+	}
+
+	eventID, insertErr := insertSession.Exec(userName, jwt, loginTime, loginTime)
+
+	if insertErr != nil {
+		log.Println("Couldnt execute insert to user_session table")
+		return false, 0
+	}
+
+	id, err := eventID.LastInsertId()
+
+	if err != nil {
+		log.Println("Couldnt get the last inserted record ID")
+	}
+	log.Printf("Data inserted to user_session table for User : %s : ", userName)
+
+	return false, int(id)
 
 }
 
