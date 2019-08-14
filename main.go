@@ -86,5 +86,7 @@ func OutputHTML(w http.ResponseWriter, filename string, data interface{}) {
 
 // test function
 func testFunction(t_res http.ResponseWriter, t_req *http.Request) {
-	OutputHTML(t_res, "user_service/ui/test.html", nil)
+	http.Redirect(t_res, t_req, "/sendEmail", 200)
+	//notification.SendNotification("Hi hi")
+	//OutputHTML(t_res, "user_service/ui/test.html", nil)
 }

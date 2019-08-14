@@ -17,6 +17,11 @@ services:
     build:
       context: user_service/build
       dockerfile: Dockerfile
+  notification:
+    image: notification
+    build:
+      context: notification
+      dockerfile: Dockerfile
     
     
     
