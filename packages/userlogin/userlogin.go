@@ -110,50 +110,21 @@ func UserLoginData(loginResponse http.ResponseWriter, loginRequest *http.Request
 
 			loginSession, userSessionID := insertToUserSession(userName, jwt)
 
-			if !loginSession {
+			if loginSession != true {
 				log.Println("Couldnt insert data to user session table")
 			}
-			/*
-				Getting event_id from user_session table
-			*/
-			log.Println("Last user session table event id :", userSessionID)
-			// getEventID, eventIDError := db.Prepare("select event_id from user_session where user_name=? and expired=0")
 
-			// if eventIDError != nil {
-			// 	log.Println("Couldnt get event_id from user_session table")
-			// }
-			// inErr := getEventID.QueryRow(userName).Scan(&userSessioneventID) // WHERE number = 1
-			// if inErr != nil {
-			// 	panic(inErr.Error()) // proper error handling instead of panic in your app
-			// }
+			initTable := updateInitialLogin(userSessionID, eventID)
 
-			// log.Println("Event ID in user session table :", userSessioneventID)
-
-			//update initial user details table
-			initialUpdate, initErr := db.Prepare("update user_initial_login set next_event_id=? where event_id=?")
-
-			if initErr != nil {
-				log.Println("Couldnt update initial user table")
+			if initTable {
+				http.Redirect(loginResponse, loginRequest, "/home", http.StatusSeeOther)
 			}
 
-			_, updateErr := initialUpdate.Exec(userSessionID, eventID)
-
-			if updateErr != nil {
-				log.Println("Couldnt execute initial update")
-
-			}
-			log.Printf("Initial table updated for event id %d : ", eventID)
-
-			log.Println(eventID)
-
-			http.Redirect(loginResponse, loginRequest, "/home", http.StatusSeeOther)
-		} else {
+		} else { // password checking if-else
 			// This is where I need to modify not to generate new token for login
 			http.Redirect(loginResponse, loginRequest, "/", http.StatusSeeOther)
 		}
-	}
-
-	// if user credintials are ok
+	} // cookie availble checking if-else
 
 }
 
@@ -240,7 +211,9 @@ func insertToUserSession(userName string, jwt string) (bool, int) {
 		log.Println("Couldnt execute insert to user_session table")
 		return false, 0
 	}
-
+	/*
+		Could this be a problem when multiple users access?
+	*/
 	id, err := eventID.LastInsertId()
 
 	if err != nil {
@@ -250,6 +223,27 @@ func insertToUserSession(userName string, jwt string) (bool, int) {
 
 	return false, int(id)
 
+}
+
+// Updating initial table
+func updateInitialLogin(userSessionID int, eventID int) bool {
+	//update initial user details table
+	db := dbConn()
+	defer db.Close()
+	initialUpdate, initErr := db.Prepare("update user_initial_login set next_event_id=? where event_id=?")
+
+	if initErr != nil {
+		log.Println("Couldnt update initial user table")
+	}
+
+	_, updateErr := initialUpdate.Exec(userSessionID, eventID)
+
+	if updateErr != nil {
+		log.Println("Couldnt execute initial update")
+		return false
+	}
+	log.Printf("Initial table updated for event id %d : ", eventID)
+	return true
 }
 
 // PasswordHashing exports hased password
