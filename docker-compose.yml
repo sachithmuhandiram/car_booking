@@ -4,11 +4,19 @@ services:
   car_booking:
     image: car_booking
     build:
-      context: build
+      context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/go/src/car_booking
     network_mode: "host"
     ports:
       - "8080:8080"
+    volumes:
+      - .:/go/src/car_booking
+
+  user_service:
+    image: user_service
+    build:
+      context: user_service/build
+      dockerfile: Dockerfile
+    
+    
     

@@ -5,16 +5,16 @@ import (
 	"log"
 	"net/http"
 
-	"./packages/cookiecheck"
-	"./packages/userlogin"
-	"./packages/userregister"
+	"./user_service/packages/cookiecheck"
+	"./user_service/packages/userlogin"
+	"./user_service/packages/userregister"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var tmpl *template.Template
 
 func init() {
-	tmpl = template.Must(template.ParseGlob("ui/*.html"))
+	tmpl = template.Must(template.ParseGlob("user_service/ui/*.html"))
 
 	//	temp, _ := template.ParseFiles("ui/login.html")
 	//fmt.Println(*temp)
@@ -60,15 +60,15 @@ func userLoginView(reswt http.ResponseWriter, req *http.Request) {
 
 	// insert initial token to table
 
-	OutputHTML(reswt, "ui/login.html", nil)
+	OutputHTML(reswt, "user_service/ui/login.html", nil)
 }
 
 func getEmailView(registerResponse http.ResponseWriter, registerRequest *http.Request) {
-	OutputHTML(registerResponse, "ui/send_verification_email.html", nil)
+	OutputHTML(registerResponse, "user_service/ui/send_verification_email.html", nil)
 }
 
 func userHomeView(homeResponse http.ResponseWriter, homeRequest *http.Request) {
-	OutputHTML(homeResponse, "ui/user_home.html", nil)
+	OutputHTML(homeResponse, "user_service/ui/user_home.html", nil)
 }
 
 // OutputHTML view generic
@@ -86,5 +86,5 @@ func OutputHTML(w http.ResponseWriter, filename string, data interface{}) {
 
 // test function
 func testFunction(t_res http.ResponseWriter, t_req *http.Request) {
-	OutputHTML(t_res, "ui/test.html", nil)
+	OutputHTML(t_res, "user_service/ui/test.html", nil)
 }

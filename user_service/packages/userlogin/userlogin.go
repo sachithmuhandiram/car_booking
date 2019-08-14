@@ -221,7 +221,7 @@ func insertToUserSession(userName string, jwt string) (bool, int) {
 	}
 	log.Printf("Data inserted to user_session table for User : %s : ", userName)
 
-	return false, int(id)
+	return true, int(id)
 
 }
 
