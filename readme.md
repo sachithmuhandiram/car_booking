@@ -8,7 +8,7 @@ I will try to follow [golang-standards](https://github.com/golang-standards/proj
 
 ## Architecture
 
-![Basic architecture](documents/Architecture.jpeg)
+![Basic architecture](user_service/documents/Architecture.jpeg)
 
 ## Technologies
 
