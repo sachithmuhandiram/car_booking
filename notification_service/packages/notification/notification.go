@@ -36,6 +36,8 @@ func getCredintials() (string, string, string) {
 }
 
 func SendNotification(res http.ResponseWriter, req *http.Request) {
+
+	// This body value should have a token and it should be inserted to a db
 	body := "hi hi"
 	from, pass, to := getCredintials()
 
