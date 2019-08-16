@@ -11,10 +11,9 @@ import (
 )
 
 type emailDetails struct {
-	emailData string `json: "emailDetails"`
-	// fromEmail   string `json:"from"`
-	// emailParser string `json:"parse"`
-	// toEmail     string `json:"toemail"`
+	From    string `json:"from"`
+	Parse   string `json:"parse"`
+	Toemail string `json:"toemail"`
 }
 
 // This function reads the json file and pass values to SendNotification
@@ -30,9 +29,9 @@ func getCredintials() (string, string, string) {
 
 	var email emailDetails
 	json.Unmarshal(byteValue, &email)
-	log.Println("User Type: " + email.emailDetails.fromEmail)
+	log.Println("User Type: " + email.From)
 
-	return email.fromEmail, email.emailParser, email.toEmail
+	return email.From, email.Parse, email.Toemail
 
 }
 
