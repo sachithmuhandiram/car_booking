@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"./notification_service/packages/notification"
 	"./user_service/packages/cookiecheck"
 	"./user_service/packages/userlogin"
 	"./user_service/packages/userregister"
@@ -26,7 +27,7 @@ func main() {
 	http.HandleFunc("/register", getEmailView)
 	http.HandleFunc("/register_user", userregister.GetEmail)
 	http.HandleFunc("/home", checkCookie)
-	http.HandleFunc("/test", testFunction)
+	http.HandleFunc("/test", notification.SendNotification)
 	http.ListenAndServe(":8080", nil)
 
 }
