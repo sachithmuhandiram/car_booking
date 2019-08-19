@@ -29,6 +29,8 @@ services:
     build:
       context: notification_service
       dockerfile: Dockerfile
+    volumes:
+      - /notification_service:/go/src/car_booking/notification_service
     #network_mode: "host"
 networks:
   carbooking:
