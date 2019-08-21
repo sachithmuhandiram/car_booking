@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"./notification_service/packages/notification"
+	cars "./car_module/packages"
 	"./user_service/packages/cookiecheck"
 	"./user_service/packages/userlogin"
 	"./user_service/packages/userregister"
@@ -27,9 +27,14 @@ func main() {
 	http.HandleFunc("/register", getEmailView)
 	http.HandleFunc("/register_user", userregister.GetEmail)
 	http.HandleFunc("/home", checkCookie)
-	http.HandleFunc("/test", notification.SendNotification)
+	http.HandleFunc("/testView", testView)
+	http.HandleFunc("/test", cars.ProcessPhoto)
 	http.ListenAndServe(":8080", nil)
 
+}
+
+func testView(reswt http.ResponseWriter, req *http.Request) {
+	OutputHTML(reswt, "car_module/ui/uploadPhoto.html", nil)
 }
 
 // internal functions
@@ -87,7 +92,8 @@ func OutputHTML(w http.ResponseWriter, filename string, data interface{}) {
 
 // test function
 func testFunction(t_res http.ResponseWriter, t_req *http.Request) {
-	http.Redirect(t_res, t_req, "/sendEmail", 200)
+	//http.Redirect(t_res, t_req, "/sendEmail", 200)
 	//notification.SendNotification("Hi hi")
 	//OutputHTML(t_res, "user_service/ui/test.html", nil)
+
 }
