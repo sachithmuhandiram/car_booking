@@ -32,6 +32,14 @@ services:
     volumes:
       - .:/go/src/car_booking
     #network_mode: "host"
+
+  car_module:
+    image: car_module
+    build:
+      context: car_module/build
+      dockerfile: Dockerfile
+    volumes:
+      - .:/go/src/car_booking
 networks:
   carbooking:
     external: true
