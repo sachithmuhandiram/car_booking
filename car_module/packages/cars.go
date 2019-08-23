@@ -41,6 +41,8 @@ func ProcessPhoto(pResponse http.ResponseWriter, processRequest *http.Request) {
 
 func InsertCar(imagePath string) {
 	db := dbConn()
+
+	defer db.Close()
 	insertImage, imageErr := db.Prepare("insert into test(id,image) values(?,?)")
 
 	/*
@@ -58,4 +60,11 @@ func InsertCar(imagePath string) {
 		//return false
 	}
 	//return true
+}
+
+func ShowCars(carResponse http.ResponseWriter, carRequest *http.Request) {
+
+	db := dbConn()
+	defer db.Close()
+
 }

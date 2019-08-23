@@ -29,6 +29,7 @@ func main() {
 	http.HandleFunc("/home", checkCookie)
 	http.HandleFunc("/testView", testView)
 	http.HandleFunc("/test", cars.ProcessPhoto)
+	http.HandleFunc("showCar", cars.ShowCars)
 	http.ListenAndServe(":8080", nil)
 
 }
