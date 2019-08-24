@@ -28,8 +28,8 @@ func main() {
 	http.HandleFunc("/register_user", userregister.GetEmail)
 	http.HandleFunc("/home", checkCookie)
 	http.HandleFunc("/testView", testView)
-	http.HandleFunc("/test", cars.ProcessPhoto)
-	http.HandleFunc("showCar", cars.ShowCars)
+	http.HandleFunc("/test", cars.ProcessPhotos)
+	http.HandleFunc("/showCar", cars.ShowCars)
 	http.ListenAndServe(":8080", nil)
 
 }

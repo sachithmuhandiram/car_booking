@@ -1,10 +1,20 @@
 package cars
 
 import (
+	"crypto/rand"
 	"database/sql"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
+	"reflect"
 )
+
+type CarPhotos struct {
+	Id    string `json:id`
+	Image []byte `json:image`
+}
 
 func dbConn() (db *sql.DB) {
 	db, err := sql.Open("mysql", "root:7890@tcp(127.0.0.1:3306)/car_booking_cars")
@@ -15,31 +25,41 @@ func dbConn() (db *sql.DB) {
 	return db
 }
 
-func ProcessPhoto(pResponse http.ResponseWriter, processRequest *http.Request) {
-	if processRequest.Method != "POST" {
+func ProcessPhotos(pResponse http.ResponseWriter, uploadRequest *http.Request) {
+	if uploadRequest.Method != "POST" {
 		log.Panic("Form data is not Post")
 	}
+	inPhoto, header, err := uploadRequest.FormFile("imageOne")
 
-	processRequest.ParseMultipartForm(10 << 20) // max 10MB
-	photoOne, photoOneHandler, pOneError := processRequest.FormFile("imageOne")
+	if err != nil {
+		log.Println("Error parsing the image file")
 
-	if pOneError != nil {
-		log.Println("Error uploading photo")
 	}
-	// photoTwo := processRequest.FormValue("imageTwo")
-	// photoThree := processRequest.FormValue("imageThree")
-	// photoFour := processRequest.FormValue("imageFour")
-	// photoFive := processRequest.FormValue("imageFive")
+	// Getting a random text to photo
+	newName := randomName()
 
-	//photos := []string{photoOne, photoTwo, photoThree, photoFour, photoFive}
+	// Create new file
+	savePhoto, errCreate := os.Create("car_module/gallery/" + newName + header.Filename)
 
-	//for i := 0; i < 5; i++ {
-	InsertCar(photoOneHandler.Filename)
-	//}
-	defer photoOne.Close()
+	log.Println("Save photo : ", *savePhoto)
+	if errCreate != nil {
+		log.Fatal(errCreate)
+	}
+
+	_, errCopy := io.Copy(savePhoto, inPhoto)
+
+	if errCopy != nil {
+		log.Println("Error copying inphoto", errCopy)
+	}
+
+	defer savePhoto.Close()
+	defer inPhoto.Close()
+
+	insertImage("car_module/gallery/" + newName + header.Filename)
+
 }
 
-func InsertCar(imagePath string) {
+func insertImage(imagePath string) {
 	db := dbConn()
 
 	defer db.Close()
@@ -53,7 +73,7 @@ func InsertCar(imagePath string) {
 		//return false
 	}
 
-	_, insertErr := insertImage.Exec(1, imagePath)
+	_, insertErr := insertImage.Exec(10, imagePath)
 
 	if insertErr != nil {
 		log.Println("Couldnt insert image to table", imagePath)
@@ -66,5 +86,26 @@ func ShowCars(carResponse http.ResponseWriter, carRequest *http.Request) {
 
 	db := dbConn()
 	defer db.Close()
+	id := 5
+	var carPhoto CarPhotos
 
+	cars := db.QueryRow("SELECT image FROM test WHERE id=?", id).Scan(&carPhoto.Image)
+
+	if cars != nil {
+		log.Println("Couldnt get image from DB", cars) // posible system error or hacking attempt ?
+	}
+
+	log.Println("Image taken from DB : ", carPhoto.Image)
+	log.Println("Data type : ", reflect.TypeOf(carPhoto.Image))
+
+}
+
+func randomName() string {
+	b := make([]byte, 8)
+	if _, err := rand.Read(b); err != nil {
+		panic(err)
+	}
+	s := fmt.Sprintf("%X", b)
+
+	return s
 }
