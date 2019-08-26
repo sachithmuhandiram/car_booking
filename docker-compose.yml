@@ -6,10 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    network_mode: "host"
-    # networks:
-    #   - carbooking
-    #     external: true
     ports:
       - "8080:8080"
     volumes:
@@ -20,9 +16,8 @@ services:
     build:
       context: user_service/build
       dockerfile: Dockerfile
-    networks:
-      - carbooking
-    #     external: true
+    depends_on:
+      - notification
 
   notification:
     image: notification
@@ -40,9 +35,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/go/src/car_booking
-networks:
-  carbooking:
-    external: true
+
     
     
     

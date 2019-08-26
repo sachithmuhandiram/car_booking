@@ -5,8 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	cars "./car_module/packages"
 	"./user_service/packages/cookiecheck"
+
+	cars "./car_module/packages"
 	"./user_service/packages/userlogin"
 	"./user_service/packages/userregister"
 	_ "github.com/go-sql-driver/mysql"

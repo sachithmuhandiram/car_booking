@@ -30,4 +30,12 @@ func GetEmail(registerResponse http.ResponseWriter, registerRequest *http.Reques
 
 func sendRegisterEmail(email string) {
 
+	sendMail, err := http.Post("http://notification:7070/sendmail", email, nil)
+
+	if err != nil {
+		log.Println("Couldnt post send email")
+	}
+
+	log.Println("send mail sent : ", sendMail)
+
 }

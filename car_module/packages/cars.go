@@ -26,12 +26,13 @@ func dbConn() (db *sql.DB) {
 }
 
 func ProcessPhotos(pResponse http.ResponseWriter, uploadRequest *http.Request) {
+
 	if uploadRequest.Method != "POST" {
 		log.Panic("Form data is not Post")
 	}
-	inPhoto, header, err := uploadRequest.FormFile("imageOne")
+	firstPhoto, firstHeader, firstErr := uploadRequest.FormFile("imageOne")
 
-	if err != nil {
+	if firstErr != nil {
 		log.Println("Error parsing the image file")
 
 	}
@@ -39,23 +40,23 @@ func ProcessPhotos(pResponse http.ResponseWriter, uploadRequest *http.Request) {
 	newName := randomName()
 
 	// Create new file
-	savePhoto, errCreate := os.Create("car_module/gallery/" + newName + header.Filename)
+	savePhoto, errCreate := os.Create("car_module/gallery/" + newName + firstHeader.Filename)
 
 	log.Println("Save photo : ", *savePhoto)
 	if errCreate != nil {
 		log.Fatal(errCreate)
 	}
 
-	_, errCopy := io.Copy(savePhoto, inPhoto)
+	_, errCopy := io.Copy(savePhoto, firstPhoto)
 
 	if errCopy != nil {
 		log.Println("Error copying inphoto", errCopy)
 	}
 
 	defer savePhoto.Close()
-	defer inPhoto.Close()
+	defer firstPhoto.Close()
 
-	insertImage("car_module/gallery/" + newName + header.Filename)
+	insertImage("car_module/gallery/" + newName + firstHeader.Filename)
 
 }
 
