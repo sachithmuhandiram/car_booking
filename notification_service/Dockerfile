@@ -5,10 +5,10 @@ RUN apk update
 COPY . /go/src/
 
 #RUN go run src/packages/notification/notification.go
-RUN go build -o main src/main.go
+# RUN go build -o main src/main.go
 
-EXPOSE 7070
+# EXPOSE 7070
 
-RUN chmod 755 main
+# RUN chmod 755 main
 
-CMD [ "./main" ]
+# CMD [ "./main" ]

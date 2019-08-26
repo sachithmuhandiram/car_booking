@@ -10,14 +10,16 @@ services:
       - "8080:8080"
     volumes:
       - .:/go/src/car_booking
+    # depends_on:
+    #   - user_service
 
   user_service:
     image: user_service
     build:
       context: user_service/build
       dockerfile: Dockerfile
-    depends_on:
-      - notification
+    # depends_on:
+    #   - notification
 
   notification:
     image: notification

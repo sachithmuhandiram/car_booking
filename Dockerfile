@@ -15,7 +15,6 @@ RUN go get -u golang.org/x/crypto/...
 COPY . /go/src/car_booking
 WORKDIR /go/src/car_booking/
 
-CMD ["go","run","main.go"]
 # RUN pwd
 
 # RUN go build -o main .
