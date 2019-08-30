@@ -8,9 +8,16 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/sendmail", sendMail)
-	http.ListenAndServe("0.0.0.0:7070", nil)
 	log.Println("started notification service")
+	http.HandleFunc("/sendmail", sendMail)
+	err := http.ListenAndServe("0.0.0.0:7070", nil)
+
+	if err != nil {
+		log.Println("couldnt start")
+	}
+
+	log.Println("Printing err value : ", err)
+
 }
 
 func sendMail(res http.ResponseWriter, req *http.Request) {

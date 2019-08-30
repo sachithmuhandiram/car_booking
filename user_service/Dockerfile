@@ -14,7 +14,12 @@ RUN  go get github.com/go-sql-driver/mysql
 #RUN rc-service mariadb restart
 RUN go get -u golang.org/x/crypto/...
 #RUN mysqladmin -u root password "${DB_ROOT_PASS}"
-WORKDIR /go/src/car_booking/user_service
+COPY . /go/src
+WORKDIR /go/src/user_service
+
+# RUN pwd
+
+# CMD [ "go","run","main.go" ]
 
 
 

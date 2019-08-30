@@ -10,16 +10,17 @@ services:
       - "8080:8080"
     volumes:
       - .:/go/src/car_booking
+    network_mode: "host"
     # depends_on:
     #   - user_service
 
   user_service:
     image: user_service
     build:
-      context: user_service/build
+      context: user_service
       dockerfile: Dockerfile
     # depends_on:
-    #   - notification
+    #   - car_booking
 
   notification:
     image: notification
@@ -28,7 +29,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/go/src/car_booking
-    #network_mode: "host"
+    depends_on:
+      - user_service
 
   car_module:
     image: car_module

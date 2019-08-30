@@ -17,10 +17,10 @@ func GetEmail(registerResponse http.ResponseWriter, registerRequest *http.Reques
 	}
 	email := registerRequest.FormValue("email")
 
-	fmt.Println("Email address : ", email)
-
 	if validEmail.MatchString(email) {
 		fmt.Println("Valida email")
+		fmt.Println("Email address : ", email)
+
 		sendRegisterEmail(email)
 	} else {
 		fmt.Println("Wrong email")
@@ -29,8 +29,10 @@ func GetEmail(registerResponse http.ResponseWriter, registerRequest *http.Reques
 }
 
 func sendRegisterEmail(email string) {
+	log.Println("Send register email")
 
-	sendMail, err := http.Post("http://notification:7070/sendmail", email, nil)
+	sendMail, err := http.Get("http://notification:7070/sendmail")
+	//Post("http://notification:7070/sendmail", "application", bytes.NewBuffer([]byte(email)))
 
 	if err != nil {
 		log.Println("Couldnt post send email")
