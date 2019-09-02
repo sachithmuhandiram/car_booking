@@ -7,6 +7,7 @@ import (
 
 	"./user_service/packages/cookiecheck"
 
+	bookings "./bookings/packages"
 	cars "./car_module/packages"
 	"./user_service/packages/userlogin"
 	"./user_service/packages/userregister"
@@ -31,6 +32,7 @@ func main() {
 	http.HandleFunc("/testView", testView)
 	http.HandleFunc("/test", cars.ProcessPhotos)
 	http.HandleFunc("/showCar", cars.ShowCars)
+	http.HandleFunc("/dateselection", bookings.ShowDates)
 	http.ListenAndServe(":8080", nil)
 
 }
