@@ -33,6 +33,7 @@ func main() {
 	http.HandleFunc("/test", cars.ProcessPhotos)
 	http.HandleFunc("/showCar", cars.ShowCars)
 	http.HandleFunc("/dateselection", bookings.ShowDates)
+	http.HandleFunc("/searchdates", bookings.SearchDates)
 	http.ListenAndServe(":8080", nil)
 
 }

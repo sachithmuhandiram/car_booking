@@ -1,13 +1,36 @@
 package booking
 
 import (
+	"log"
 	"net/http"
 	"text/template"
 )
 
-// Shows date selection page.
+// ShowDates shows date selection page.
 func ShowDates(res http.ResponseWriter, req *http.Request) {
 	OutputHTML(res, "bookings/ui/dateSelection.html", nil)
+}
+
+// SearchDates gets data from form and parse
+func SearchDates(res http.ResponseWriter, req *http.Request) {
+	log.Println("Sesrch date function")
+	if req.Method != "POST" {
+		log.Panic("Search date data is not Post")
+		http.Redirect(res, req, "/dateselection", http.StatusSeeOther)
+	}
+
+	/*
+		Cookie matching to be done
+	*/
+
+	startDate := req.FormValue("startdate")
+	endDate := req.FormValue("enddate")
+	vehicleType := req.FormValue("vtype")
+
+	log.Println("Start date : ", startDate)
+	log.Println("End date :", endDate)
+	log.Println("Vehicle tyoe : ", vehicleType)
+
 }
 
 // OutputHTML view generic
