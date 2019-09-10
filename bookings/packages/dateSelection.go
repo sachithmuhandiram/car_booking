@@ -2,7 +2,6 @@ package booking
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -36,8 +35,9 @@ func SearchDates(res http.ResponseWriter, req *http.Request) {
 	db := dbConn()
 	defer db.Close()
 
-	var booking booking
+	//var booking booking
 
+	log.Println("----- SearchDates started -----")
 	if req.Method != "POST" {
 		log.Panic("Search date data is not Post")
 		http.Redirect(res, req, "/dateselection", http.StatusSeeOther)
@@ -49,21 +49,32 @@ func SearchDates(res http.ResponseWriter, req *http.Request) {
 
 	startDate := req.FormValue("startdate")
 	endDate := req.FormValue("enddate")
-	vehicleType := req.FormValue("vtype")
+	//vehicleType := req.FormValue("vtype")
 
-	t := time.Now()
-	today := fmt.Sprintf("%d-%02d-%02d", t.Year(), t.Month(), t.Day())
+	//t := time.Now()
+	//today := fmt.Sprintf("%d-%02d-%02d", t.Year(), t.Month(), t.Day())
 
-	bookingCheck := db.QueryRow("SELECT vehicle_id FROM booking WHERE start_date=? < ? and end_date< ?", startDate, today, endDate).Scan(&booking.vehicleID)
+	query := `SELECT vehicle_id FROM booking WHERE start_date > ? and start_date > ? 
+				UNION 
+			  SELECT vehicle_id FROM booking WHERE end_date < ?`
 
-	if bookingCheck != nil {
-		log.Println("Couldnt fetch available vehicles from booking table")
+	bookingCheck, err := db.Query(query, startDate, endDate, startDate) //.Scan(&booking.vehicleID)
+
+	if err != nil {
+		log.Println("Couldnt fetch available vehicles from booking table", bookingCheck)
 	}
 
-	log.Println("Start date : ", startDate)
-	log.Println("End date :", endDate)
-	log.Println("Vehicle tyoe : ", vehicleType)
+	// _, err := bookingCheck.Columns()
 
+	// if err != nil {
+	// 	log.Println("Getting vehicle ID columns failed")
+	// }
+
+	for bookingCheck.Next() {
+		log.Println("Availble Vehicles : ", bookingCheck)
+	}
+
+	defer log.Println("---- End SearchDates ----")
 }
 
 // OutputHTML view generic
