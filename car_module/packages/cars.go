@@ -74,7 +74,7 @@ func insertImage(imagePath string) {
 		//return false
 	}
 
-	_, insertErr := insertImage.Exec(10, imagePath)
+	_, insertErr := insertImage.Exec(3, imagePath)
 
 	if insertErr != nil {
 		log.Println("Couldnt insert image to table", imagePath)
@@ -83,8 +83,10 @@ func insertImage(imagePath string) {
 	//return true
 }
 
+// ShowCars show a car from database
 func ShowCars(carResponse http.ResponseWriter, carRequest *http.Request) {
 
+	log.Println("--- Starting ShowCars ---")
 	db := dbConn()
 	defer db.Close()
 	id := 5
@@ -99,6 +101,7 @@ func ShowCars(carResponse http.ResponseWriter, carRequest *http.Request) {
 	log.Println("Image taken from DB : ", carPhoto.Image)
 	log.Println("Data type : ", reflect.TypeOf(carPhoto.Image))
 
+	defer log.Println("--- End ShowCars ---")
 }
 
 func randomName() string {
